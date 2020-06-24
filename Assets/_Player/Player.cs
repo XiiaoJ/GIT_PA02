@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
 
     private float moveSpeed = 0.05f;
 
+    public GameObject Particle;
+
     void Start()
     {
         thisController = GetComponent<CharacterController>();
@@ -54,4 +56,17 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -1.5f, 1.5f), transform.position.y, transform.position.z);
     }
 
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Obstacle")
+        {
+            GameManager.Lives--;
+            HUD.HUDManager.UpdateLives();
+            Instantiate(Particle, transform.position, Quaternion.identity);
+        }
+        if (GameManager.Lives == 0)
+        {
+            HUD.HUDManager.GameOver();
+        }
+    }
 }
